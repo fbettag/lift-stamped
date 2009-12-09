@@ -1,0 +1,68 @@
+h1. Lift Stamped
+  
+These traits let you extend your MetaMapper-models to log every change
+made by users (and the belonging customers).  
+  
+  
+h2. What it does do
+* logging *which user/customer* changed *which record* on *which class*
+* skip logging (initial user creation, for background-job purpose)
+* adds reverse associations so your record has a "logs" method  
+  
+  
+h2. What it does'nt do yet
+* logging of *what* changed
+* reverting records according to *what* was changed
+* reverse associations for the Singleton to get every log associated with that model  
+
+
+h2. Traits for the class
+* CustomerFields: adds a customer-object to the model
+* ActivateFields: adds an active-boolean to the model (with seperate logging)
+* ActionLogs: adds reverse associations to records (not the singleton)  
+
+
+h2. Traits for the singleton
+* Stamped: stamps any changes done to records in that model
+* Activatable: logging for ActivateFields
+
+
+h2. Stamping a model
+
+bc. class MyModel extends LongKeyedMapper[MyModel]
+	with IdPK
+	with CustomerFields[MyModel]
+	with ActionLogs[MyModel]
+	with ActivateFields[MyModel] {
+
+bc. object MyModel extends MyModel with LongKeyedMetaMapper[MyModel]
+	with Stamped[MyModel] with Activatable[MyModel]
+
+
+h2. Initial user creation with logging skipped  
+  
+In Boot.scala add this:
+
+bc. if (Customer.findAll.length == 0) {
+	/* Customer creation */
+        Customer.skipLogging = true
+        val c = new Customer
+        c.name("First Customer").save
+        Customer.skipLogging = false
+	/* User creation */
+	User.skipLogging = true
+        val u = new User
+        u.customer(c).
+        firstName("First").
+        lastName("User").
+        email("valid@e.mail").
+        password("s0m3th1ngs3cur3").
+        validated(true).save
+        User.skipLogging = false
+}
+
+
+h2. Read the sourcecode!
+
+Really, it's open source for a reason. ;)
+
