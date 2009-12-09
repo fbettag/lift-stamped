@@ -10,7 +10,7 @@ h2. What it does do
 * adds reverse associations so your record has a "logs" method  
   
   
-h2. What it does'nt do yet
+h2. What it doesn't do (yet)
 * logging of *what* changed
 * reverting records according to *what* was changed
 * reverse associations for the Singleton to get every log associated with that model  
