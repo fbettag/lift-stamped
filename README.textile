@@ -1,7 +1,7 @@
 h1. Lift Stamped
   
 These traits let you extend your MetaMapper-models to log every change
-made by users (and the belonging customers).  
+made by users (and the belonging customers). Tested on liftweb 1.1-M7.
   
   
 h2. What it does do
